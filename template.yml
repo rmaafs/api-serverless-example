@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Globals:
+  Api:
+    OpenApiVersion: 3.0.1
+    BinaryMediaTypes:
+      - image~1gif
+      - image~1png
+      - image~1jpg
+      - image~1jpeg
+  Function:
+    Handler: app.handler
+    Runtime: python3.8
+    Timeout: 120
+    #MemorySize: 500
+    # AutoPublishAlias: live
+    # ProvisionedConcurrencyConfig:
+    #   ProvisionedConcurrentExecutions: 5
+    # DeploymentPreference:
+    #   Type: AllAtOnce
+    #   Enabled: true
+
+Resources:
+  ApiGateWay:
+    EndpointConfiguration: REGIONAL
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: v1
+
+  PBApi:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      CodeUri: ./
+      Events:
+        WbAPI:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: GET
+            RestApiId: !Ref ApiGateWay
+
+Outputs:
+  ApiUrl:
+    Description: URL of your API
+    Value:
+      Fn::Sub: "https://${ApiGateWay}.execute-api.${AWS::Region}.${AWS::URLSuffix}/"

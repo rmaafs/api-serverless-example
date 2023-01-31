@@ -1,0 +1,7 @@
+## Ejemplo para crear una API serverless desde 0 usando FastAPI + Magnum.
+
+---
+
+- Primero instala los `requirements.txt` con `pip install -r requirements.txt`
+- Si se quiere desarrollar la API en localhost, usa el script `src/start_local.sh`
+- Si se quiere hacer deploy, usa el script `src/deploy.sh` (Primero hace build y luego deploy a un bucket S3)
